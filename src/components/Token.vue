@@ -1,34 +1,23 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import pinyin from 'pinyin'
-import { NOUNS, OTHERS, VERBS } from '../composables/nlp'
 
-const props = defineProps<{
+const { word, tag } = defineModels<{
   word: string
-  pos?: number
+  tag?: string
 }>()
+const items = ref<string[]>([])
+const isComputed = ref(false)
+function r() {
+  if (!isComputed.value) {
+    const py_normal = pinyin(word.value, { style: 'normal' }).join(' ')
+    const py_abbr = pinyin(word.value, { style: 'first_letter' }).join('')
+    items.value = [word.value, py_normal, py_abbr]
+    isComputed.value = true
+  }
+}
 
-const disabled = ref(false)
-const text = ref(props.word)
-const tag = computed(() => {
-  if (NOUNS.has(props.pos)) {
-    return 'noun'
-  }
-  else if (VERBS.has(props.pos)) {
-    return 'verb'
-  }
-  else if (OTHERS.has(props.pos)) {
-    return 'other'
-  }
-  else {
-    disabled.value = true
-    return 'disabled'
-  }
-})
-
-const py_normal = computed(() => pinyin(props.word, { style: 'normal' }).join(' '))
-const py_abbr = computed(() => pinyin(props.word, { style: 'first_letter' }).join(''))
-
+const showText = ref(word)
 // const show = computed(() => {
 //   switch (attributes[curid.value]) {
 //     case 'word':
@@ -44,11 +33,33 @@ const py_abbr = computed(() => pinyin(props.word, { style: 'first_letter' }).joi
 </script>
 
 <template>
-  <DropDown
-    :disabled="disabled"
-    :class="tag"
-    :items="[text, py_normal, py_abbr]"
-  />
+  <span v-if="!tag" class="el-dropdown" :disabled="true">
+    {{ showText }}
+  </span>
+  <span v-else @click="r">
+    <el-dropdown :class="tag" trigger="click">
+      {{ showText }}
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item
+            v-for="(item, index) in items"
+            :key="index"
+            @click="showText = item"
+          >
+            {{ item }}
+          </el-dropdown-item>
+        <!-- <el-dropdown-item>Action 2</el-dropdown-item>
+        <el-dropdown-item>Action 3</el-dropdown-item>
+        <el-dropdown-item disabled>
+          Action 4
+        </el-dropdown-item>
+        <el-dropdown-item divided>
+          Action 5
+        </el-dropdown-item> -->
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </span>
 </template>
 
 <style>
@@ -61,43 +72,4 @@ const py_abbr = computed(() => pinyin(props.word, { style: 'first_letter' }).joi
 .other{
   color: rgb(117, 136, 153);
 }
-/* .verb {
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 0.25rem;
-  --un-bg-opacity: 1;
-  background-color: rgba(222, 117, 37, var(--un-bg-opacity));
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  --un-text-opacity: 1;
-  color: rgba(255, 255, 255, var(--un-text-opacity));
-}
-.noun {
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 0.25rem;
-  --un-bg-opacity: 1;
-  background-color: rgba(43, 164, 109, var(--un-bg-opacity));
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  --un-text-opacity: 1;
-  color: rgba(255, 255, 255, var(--un-text-opacity));
-}
-.other {
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 0.25rem;
-  --un-bg-opacity: 1;
-  background-color: rgba(117, 136, 153, var(--un-bg-opacity));
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  --un-text-opacity: 1;
-  color: rgba(255, 255, 255, var(--un-text-opacity));
-} */
 </style>

@@ -1,33 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { NOUNS, OTHERS, VERBS, tokenize } from '../composables/nlp'
+import { tokenize } from '../composables/nlp'
 
 const inputText = ref('')
-const tokens = ref()
-const isProcessed = ref(false)
-const nounTokens = ref<object[]>([])
-const verbTokens = ref<object[]>([])
-const otherTokens = ref<object[]>([])
+const tokens = ref<object[]>([])
+// const isProcessed = ref(false)
+// const nounTokens = ref<object[]>([])
+// const verbTokens = ref<object[]>([])
+// const otherTokens = ref<object[]>([])
 function processText() {
+  // console.log(inputText.value)
   tokens.value = tokenize(inputText.value)
 
-  nounTokens.value = []
-  verbTokens.value = []
-  otherTokens.value = []
-  tokenize(inputText.value).forEach((token) => {
-    if (NOUNS.has(token.p))
-      nounTokens.value.push(token)
-
-    else if (VERBS.has(token.p))
-      verbTokens.value.push(token)
-
-    else if (OTHERS.has(token.p))
-      otherTokens.value.push(token)
-  })
-
-  isProcessed.value = true
-  console.log(tokens.value)
-  console.log(tokens.value.map(item => pronounce(item.w)).join(' '))
+  // console.log(tokens.value)
 }
 
 const index = ref(0)
@@ -44,7 +29,7 @@ function randomText() {
 </script>
 
 <template>
-  <div class="input-container">
+  <div>
     <TextArea
       v-model="inputText"
       placeholder="请输入谜底"
@@ -69,42 +54,10 @@ function randomText() {
   </div>
 
   <!-- <p>{{ tokens }}</p> -->
-  <div v-if="isProcessed">
-    <span v-for="(token, index) in tokens" :key="index">
-      <Token :word="token.w" :pos="token.p" />
-    </span>
-    <!-- <div>
-    <table
-      v-if="isProcessed"
-      class="centered-table"
-    >
-      <tbody>
-        <tr>
-          <td width="33%">
-            <div v-for="(token, index) in nounTokens" :key="index">
-              <Token :word="token.w" :pos="token.p" />
-            </div>
-          </td>
-          <td width="33%">
-            <div v-for="(token, index) in verbTokens" :key="index">
-              <Token :word="token.w" :pos="token.p" />
-            </div>
-          </td>
-          <td width="33%">
-            <div v-for="(token, index) in otherTokens" :key="index">
-              <Token :word="token.w" :pos="token.p" />
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div> -->
+  <div
+    w="50%"
+    class="m-auto"
+  >
+    <Token v-for="token in tokens" :key="token.id" :word="token.w" :tag="token.p" />
   </div>
 </template>
-
-<style>
-.centered-table {
-  text-align: center;
-  margin: auto;
-}
-</style>

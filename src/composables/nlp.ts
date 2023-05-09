@@ -1,5 +1,6 @@
 import { POSTAG, Segment, useDefault } from 'segmentit'
 import pinyin from 'pinyin'
+import { timestamp } from '@vueuse/core'
 
 const segmentit = useDefault(new Segment())
 export const NOUNS = new Set([
@@ -43,9 +44,29 @@ export const OTHERS = new Set([
 
 ])
 
+function tagging(pos?: number) {
+  if (NOUNS.has(pos))
+    return 'noun'
+
+  else if (VERBS.has(pos))
+    return 'verb'
+
+  else if (OTHERS.has(pos))
+    return 'other'
+
+  else
+    return null
+}
+
 export function tokenize(text: string): object[] {
   // return segmentit.doSegment(text).map(item => item.w)
-  return segmentit.doSegment(text)
+  const t = timestamp()
+  const tokens = segmentit.doSegment(text)
+  tokens.forEach((token, id) => {
+    token.p = tagging(token.p)
+    token.id = t + id
+  })
+  return tokens
 }
 
 export function pronounce(word: string): string[][] {
