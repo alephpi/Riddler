@@ -14,6 +14,8 @@ declare module '@vue/runtime-core' {
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElIcon: typeof import('element-plus/es')['ElIcon']
+    ElPopover: typeof import('element-plus/es')['ElPopover']
+    ElSlider: typeof import('element-plus/es')['ElSlider']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TextArea: typeof import('./src/components/TextArea.vue')['default']

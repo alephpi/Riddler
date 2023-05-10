@@ -1,8 +1,20 @@
 import { POSTAG, Segment, useDefault } from 'segmentit'
-import pinyin from 'pinyin'
+import { pinyin as pronounce } from 'pinyin'
 import { timestamp } from '@vueuse/core'
+import MARSRaw from '../data/mars.min.json'
+import HOMORaw from '../data/homophones.json'
+
+interface Token {
+  w: string
+  p?: 'noun' | 'verb' | 'other'
+  id?: number
+}
+
+const MARS: Record<string, string> = MARSRaw
+const HOMO: Record<string, string> = HOMORaw
 
 const segmentit = useDefault(new Segment())
+export { pronounce }
 export const NOUNS = new Set([
   POSTAG.D_I, // 成语
   POSTAG.D_L, // 习语
@@ -44,7 +56,7 @@ export const OTHERS = new Set([
 
 ])
 
-function tagging(pos?: number) {
+function tagging(pos?: any) {
   if (NOUNS.has(pos))
     return 'noun'
 
@@ -55,13 +67,13 @@ function tagging(pos?: number) {
     return 'other'
 
   else
-    return null
+    return undefined
 }
 
 export function tokenize(text: string): object[] {
   // return segmentit.doSegment(text).map(item => item.w)
   const t = timestamp()
-  const tokens = segmentit.doSegment(text)
+  const tokens: Token[] = segmentit.doSegment(text)
   tokens.forEach((token, id) => {
     token.p = tagging(token.p)
     token.id = t + id
@@ -69,6 +81,32 @@ export function tokenize(text: string): object[] {
   return tokens
 }
 
-export function pronounce(word: string): string[][] {
-  return pinyin(word)
+export function march(word: string, temper = 0.1): string {
+  let mars = ''
+  for (const char of word) {
+    if ((Math.random() > temper) || !(char in MARS)) {
+      mars += char
+      continue
+    }
+    let candi = MARS[char]
+    if (candi.length === 2)
+      candi = candi[Math.floor(Math.random() * 2)]
+    mars += candi
+  }
+  return mars
+}
+
+export function homoph(word: string, pinyin: string[], temper = 0.1): string {
+  let homo = ''
+  for (let i = 0; i < word.length; i++) {
+    if (Math.random() > temper || !(pinyin[i] in HOMO)) {
+      homo += word[i]
+      continue
+    }
+    let candi = HOMO[pinyin[i]]
+    if (candi.length > 1)
+      candi = candi[Math.floor(Math.random() * candi.length)]
+    homo += candi
+  }
+  return homo
 }

@@ -6,23 +6,25 @@
 
 以下功能作用域默认实词
 
-- [ ] 单词替换: 无产阶级 -> 打工人
+[ ] 文贵曲（自定义替换）: 无产阶级 -> 打工人
 
-- [ ] 单字脱漏: 无产阶级 -> 无阶级
+❎ 缺心眼（单字脱漏）: 无产阶级 -> 无阶级
 
-- [ ] 谐音漂移（谐音字）: 无产阶级 -> 舞铲街机
+[ ] 谐音梗（谐音字）: 无产阶级 -> 舞铲街机
 
-- [ ] 字形讹变（异体字、形近字）: 无产阶级 -> 無產階級
+[ ] 火星文（异体字）: 无产阶级 -> 無產階級
 
-- [x] 拼音借代: 无产阶级 -> wu chan jie ji
+[ ] 空一格：无产阶级 -> 无 产 阶 级
 
-- [ ] 外语综合征（译外）: 无产阶级 -> proletariat
+✅ 小学生（拼音）: 无产阶级 -> wu chan jie ji
 
-- [ ] 洋泾滨（译音）: 无产阶级 -> proletariat -> 普罗达利亚 (鸡肋，暂不知如何合理实现)(phoneme to pinyin)
+[ ] 海龟人（译外）: 无产阶级 -> proletariat
 
-- [x] yyds（缩写）: 无产阶级 -> wcjj
+❎ 洋泾滨（译音）: 无产阶级 -> proletariat -> 普罗达利亚 (鸡肋，暂不知如何合理实现)(phoneme to pinyin)
 
-- [ ] Emoji（抽象）: 无产阶级 -> 你 👷👴 来 🌶️(由于已经有相关网站实现该功能，本工具暂不重复)
+✅ yyds（缩写）: 无产阶级 -> wcjj
+
+❎ emoji（抽象）: 无产阶级 -> 你 👷👴 来 🌶️(由于已经有相关网站实现该功能，本工具暂不重复)
 
 ## 示例
 
@@ -37,10 +39,14 @@
 ## 致谢 
 - [segmentit](https://github.com/linonetwo/segmentit) 分词及词性标注
 - [pinyin](https://github.com/hotoo/pinyin) 注音
+- [ChineseHomophones](https://github.com/LiangsLi/ChineseHomophones)
+- [简体中文、繁体中文与火星文对应文字的查询数据库](https://gist.github.com/Niefee/43e9cf243cd5571bfd8bbf06b3651cc3)
 - 以 [Vitesse-Lite](https://github.com/antfu/vitesse-lite/) 模板开始
 
 ## 免责声明
-本工具仅限于科研用途，对用户造成的一切后果概不负责，请用户在明确使用风险的前提下使用，并对自己的使用全权负责。
+
+本工具并非AIGC工具，一切内容由用户指定生成，请仔细甄别。
+本工具仅限于科研用途，对用户造成的一切后果概不负责，请用户在明确使用风险的前提下使用，并全权负责。
 
 ## 许可证
 

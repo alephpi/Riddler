@@ -16,15 +16,15 @@ function processText() {
 }
 
 const index = ref(0)
-const randomTexts = [
+const examples = [
   '这种事情见得多了，我只想说懂得都懂，不懂的我也不多解释，毕竟自己知道就好，细细品吧。',
   '一个幽灵，共产主义的幽灵，在欧洲游荡。为了对这个幽灵进行神圣的围剿，旧欧洲的一切势力，教皇和沙皇、梅特涅和基佐、法国的激进派和德国的警察，都联合起来了。',
   '马克思以前的唯物论，离开人的社会性，离开人的历史发展，去观察认识问题，因此不能了解认识对社会实践的依赖关系，即认识对生产和阶级斗争的依赖关系。',
 ]
 
 function randomText() {
-  index.value = (index.value + 1) % randomTexts.length
-  inputText.value = randomTexts[index.value]
+  index.value = (index.value + 1) % examples.length
+  inputText.value = examples[index.value]
 }
 </script>
 
