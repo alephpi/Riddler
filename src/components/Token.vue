@@ -1,26 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { homoph, march, pronounce } from '../composables/nlp'
-import { temper } from '../composables/state'
+import type { Token } from '../composables/nlp'
 
-const { word, tag } = defineModels<{
-  word: string
-  tag?: string
+const { token } = defineModels<{
+  token: Token
 }>()
+
 // const isComputed = ref(false)
-const py_normal = ref(pronounce(word.value, { style: 'normal' }).join(' '))
-const py_abbr = ref(pronounce(word.value, { style: 'first_letter' }).join(''))
-const mars = ref(march(word.value, temper.value))
-const homo = ref(homoph(word.value, py_normal.value.split(' '), temper.value))
-const items = ref([word.value, py_normal.value, py_abbr.value, mars.value, homo.value])
 // function r() {
 //   if (!isComputed.value) {
 //     items.value = [word.value, py_normal, py_abbr]
 //     isComputed.value = true
 //   }
 // }
-
-const showText = ref(word)
+const showText = ref(token.value.items[Math.floor(Math.random() * token.value.items.length)])
 // const show = computed(() => {
 //   switch (attributes[curid.value]) {
 //     case 'word':
@@ -36,16 +29,16 @@ const showText = ref(word)
 </script>
 
 <template>
-  <span v-if="!tag" class="el-dropdown" :disabled="true">
-    {{ showText }}
+  <span v-if="!token.tag" class="el-dropdown" :disabled="true">
+    {{ token.items[0] }}
   </span>
   <span v-else>
-    <el-dropdown :class="tag" trigger="hover">
+    <el-dropdown :class="token.tag" trigger="hover">
       {{ showText }}
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item
-            v-for="(item, index) in items"
+            v-for="(item, index) in token.items"
             :key="index"
             @click="showText = item"
           >

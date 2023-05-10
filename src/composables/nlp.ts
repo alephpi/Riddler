@@ -4,10 +4,11 @@ import { timestamp } from '@vueuse/core'
 import MARSRaw from '../data/mars.min.json'
 import HOMORaw from '../data/homophones.json'
 
-interface Token {
-  w: string
-  p?: 'noun' | 'verb' | 'other'
-  id?: number
+export interface Token {
+  word: string
+  tag?: 'noun' | 'verb' | 'other'
+  id: number
+  items: string[]
 }
 
 const MARS: Record<string, string> = MARSRaw
@@ -35,7 +36,7 @@ export const OTHERS = new Set([
   POSTAG.D_X, // 非语素字
   POSTAG.D_Z, // 状态词
   // POSTAG.D_C, // 连词 连语素
-  // POSTAG.D_D, // 副词 副语素
+  POSTAG.D_D, // 副词 副语素
   // POSTAG.D_E, // 叹词 叹语素
   // POSTAG.D_F, // 方位词 方位语素
   // POSTAG.A_M, // 数词 数语素
@@ -63,19 +64,28 @@ function tagging(pos?: any) {
   else if (VERBS.has(pos))
     return 'verb'
 
-  else if (OTHERS.has(pos))
-    return 'other'
+  // else if (OTHERS.has(pos))
+  //   return 'other'
 
   else
     return undefined
 }
 
-export function tokenize(text: string): object[] {
+export function tokenize(text: string): Token[] {
   // return segmentit.doSegment(text).map(item => item.w)
   const t = timestamp()
-  const tokens: Token[] = segmentit.doSegment(text)
+  const raw_tokens = segmentit.doSegment(text)
+  const tokens: Token[] = []
+  for (const [i, raw_token] of raw_tokens.entries()) {
+    tokens[i] = {
+      word: raw_token.w,
+      tag: raw_token.p,
+      id: t + i,
+      items: [],
+    }
+  }
   tokens.forEach((token, id) => {
-    token.p = tagging(token.p)
+    token.tag = tagging(token.tag)
     token.id = t + id
   })
   return tokens

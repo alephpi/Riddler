@@ -1,18 +1,41 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { tokenize } from '../composables/nlp'
+import { type Token, tokenize } from '../composables/nlp'
 
 const inputText = ref('')
-const tokens = ref<object[]>([])
+const tokens = ref<Token[]>([])
 // const isProcessed = ref(false)
 // const nounTokens = ref<object[]>([])
 // const verbTokens = ref<object[]>([])
 // const otherTokens = ref<object[]>([])
+const id2token = ref<Record<number, string>>({})
+const tokenSet = ref<Record<string, object>>({})
 function processText() {
   // console.log(inputText.value)
+  id2token.value = {}
+  tokenSet.value = {}
   tokens.value = tokenize(inputText.value)
-
-  // console.log(tokens.value)
+  for (const token of tokens.value) {
+    const word = token.word
+    // console.log(word)
+    const id = token.id
+    const tag = token.tag
+    const items: string[] = [word]
+    id2token.value[id] = word
+    if (!(word in tokenSet.value)) {
+      if (tag) {
+        const py_normal = pronounce(word, { style: 'normal' }).join(' ')
+        const py_abbr = pronounce(word, { style: 'first_letter' }).join('')
+        const mars = march(word, temper.value)
+        const homo = homoph(word, py_normal.split(' '), temper.value)
+        items.push(py_normal, py_abbr, mars, homo)
+      }
+      tokenSet.value[word] = {
+        tag,
+        items,
+      }
+    }
+  }
 }
 
 const index = ref(0)
@@ -51,6 +74,7 @@ function randomText() {
     >
       加密
     </button>
+    <!-- <Share :text="text" /> -->
   </div>
 
   <!-- <p>{{ tokens }}</p> -->
@@ -58,6 +82,6 @@ function randomText() {
     w="50%"
     class="m-auto"
   >
-    <Token v-for="token in tokens" :key="token.id" :word="token.w" :tag="token.p" />
+    <Token v-for="(word, id) in id2token" :key="id" :token="tokenSet[word]" />
   </div>
 </template>
