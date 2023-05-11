@@ -14,6 +14,16 @@ const id2token = ref<Record<number, string>>({}) // store tokens location
 const tokenSet = ref<Record<string, { tag?: string; items: string[] }>>({}) // store unique tokens
 const showTexts = ref<string[]>([]) // store token show text
 
+function map(l: number, a: number): number {
+  const x = Math.random()
+  if (l <= 1)
+    return 0
+  if (x <= a)
+    return x / a
+  else
+    return (l * (x - a) + 1 - x) / (1 - a)
+}
+
 function processText() {
   // console.log(inputText.value)
   id2token.value = {}
@@ -34,8 +44,8 @@ function processText() {
       if (tag) {
         const py_normal = pronounce(word, { style: 'normal' }).join(' ')
         const py_abbr = pronounce(word, { style: 'first_letter' }).join('')
-        const mars = march(word, temper.value)
-        const homo = homoph(word, py_normal.split(' '), temper.value)
+        const mars = march(word, temper.value / 100)
+        const homo = homoph(word, py_normal.split(' '), temper.value / 100)
         items.push(py_normal, py_abbr, mars, homo)
       }
       tokenSet.value[word] = {
@@ -44,7 +54,7 @@ function processText() {
       }
     }
 
-    const showText = items[Math.floor(Math.random() * items.length)] || word
+    const showText = items[Math.floor(map(items.length, 1 - temper.value / 100))] || word
     showTexts.value.push(showText)
   }
 }
