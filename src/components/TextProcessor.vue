@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { type Token, tokenize, translate } from '../composables/nlp'
-import { options } from '~/composables/state'
+import { isCopied, options } from '~/composables/state'
 
 const inputText = ref('')
 let tokens: Token[] = []
@@ -63,19 +63,20 @@ async function processText() {
       }
     }
 
-    const showText = items[Math.floor(map(items.length, 1 - temper.value / 100))] || word
-    showTexts.value.push(showText)
+    // const showText = items[Math.floor(map(items.length, 1 - temper.value / 100))] || word
+    // showTexts.value.push(showText)
   }
+  encodeText()
   isProcessing = false
   processed = true
 }
 // onMounted()
-
 function encodeText() {
   for (const [i, token] of tokens.entries()) {
     const items = tokenSet.value[token.word].items
     showTexts.value[i] = items[Math.floor(map(items.length, 1 - temper.value / 100))]
   }
+  isCopied.value = false
 }
 
 const index = ref(0)
@@ -99,39 +100,61 @@ function randomText() {
       autocomple="false"
     />
   </div>
-
+  <div py-1 />
   <div>
-    <button
-      class="m-3 text-sm btn"
-      @click="randomText"
-    >
-      举例
+    <button p-2 text-6 icon-btn @click="randomText">
+      <div i-carbon-idea />
     </button>
+
     <button
-      class="m-3 text-sm btn"
       :disabled="!inputText"
-      bg
+      p-2 text-6 icon-btn
       @click="processText"
     >
-      加密
+      <div :class="{ loading: isProcessing }">
+        <div :class="{ 'i-carbon-play': !isProcessing, 'i-carbon-rotate': isProcessing }" />
+      </div>
     </button>
-    <button
+
+    <!-- <button
       class="m-3 text-sm btn"
       :disabled="tokens.length === 0"
       @click="encodeText"
     >
       更新
+    </button> -->
+    <button
+      p-2 text-6
+      icon-btn
+      :disabled="tokens.length === 0"
+      @click="encodeText"
+    >
+      <div i-carbon-renew />
     </button>
 
     <Share :text="showTexts.join('')" />
   </div>
 
-  <!-- <p>{{ tokens }}</p> -->
   <div
     v-if="processed"
+    mt-4
     w="50%"
     class="m-auto"
   >
     <Token v-for="(word, id, i) in id2token" :key="id" v-model="showTexts[i]" :token="tokenSet[word]" />
   </div>
 </template>
+
+<style>
+.loading{
+  animation: rotation 1s linear infinite;
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-359deg);
+  }
+}
+</style>

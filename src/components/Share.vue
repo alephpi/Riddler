@@ -1,20 +1,21 @@
 <script setup lang="ts">
+import { isCopied } from '~/composables/state'
+
 const { text } = defineModels<{
   text: string
 }>()
 const clipboard = useClipboard()
 
-const copied = ref(false)
 async function copy() {
   if (clipboard.isSupported) {
     await clipboard.copy(text.value)
-    copied.value = true
+    isCopied.value = true
   }
 }
 </script>
 
 <template>
-  <button icon-btn @click="copy">
-    <div :class="{ 'i-carbon-checkbox-checked': copied, 'i-carbon-copy': !copied }" />
+  <button p-2 text-6 icon-btn @click="copy">
+    <div :class="{ 'i-carbon-checkbox-checked': isCopied, 'i-carbon-copy': !isCopied }" />
   </button>
 </template>
