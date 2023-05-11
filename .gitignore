@@ -7,3 +7,10 @@ dist-ssr
 node_modules
 .idea/
 *.log
+mars.json
+homophones.txt
+process.py
+dev-notes.md
+README.md
+README.zh-CN.md
+__pycache__/
