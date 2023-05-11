@@ -2,20 +2,22 @@
 const props = defineProps<{
   items: string[]
 }>()
-const showText = ref(props.items[0])
+const { modelValue } = defineModels<{
+  modelValue: string
+}>()
 </script>
 
 <template>
   <el-dropdown>
     <span class="el-dropdown-link">
-      {{ showText }}
+      {{ modelValue }}
     </span>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item
           v-for="(item, index) in props.items"
           :key="index"
-          @click="showText = item"
+          @click="modelValue = item"
         >
           {{ item }}
         </el-dropdown-item>

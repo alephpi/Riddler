@@ -8,12 +8,17 @@ const tokens = ref<Token[]>([])
 // const nounTokens = ref<object[]>([])
 // const verbTokens = ref<object[]>([])
 // const otherTokens = ref<object[]>([])
-const id2token = ref<Record<number, string>>({})
-const tokenSet = ref<Record<string, object>>({})
+
+// avoid recompute a token variation
+const id2token = ref<Record<number, string>>({}) // store tokens location
+const tokenSet = ref<Record<string, { tag?: string; items: string[] }>>({}) // store unique tokens
+const showTexts = ref<string[]>([]) // store token show text
+
 function processText() {
   // console.log(inputText.value)
   id2token.value = {}
   tokenSet.value = {}
+  showTexts.value = []
   tokens.value = tokenize(inputText.value)
   for (const token of tokens.value) {
     const word = token.word
@@ -22,7 +27,10 @@ function processText() {
     const tag = token.tag
     const items: string[] = [word]
     id2token.value[id] = word
+
+    // lazy compute and store unique token
     if (!(word in tokenSet.value)) {
+      // compute only for tags of interest (e.g. nouns and verbs)
       if (tag) {
         const py_normal = pronounce(word, { style: 'normal' }).join(' ')
         const py_abbr = pronounce(word, { style: 'first_letter' }).join('')
@@ -35,6 +43,9 @@ function processText() {
         items,
       }
     }
+
+    const showText = items[Math.floor(Math.random() * items.length)] || word
+    showTexts.value.push(showText)
   }
 }
 
@@ -74,7 +85,7 @@ function randomText() {
     >
       加密
     </button>
-    <!-- <Share :text="text" /> -->
+    <Share :text="showTexts.join('')" />
   </div>
 
   <!-- <p>{{ tokens }}</p> -->
@@ -82,6 +93,6 @@ function randomText() {
     w="50%"
     class="m-auto"
   >
-    <Token v-for="(word, id) in id2token" :key="id" :token="tokenSet[word]" />
+    <Token v-for="(word, id, i) in id2token" :key="id" v-model="showTexts[i]" :token="tokenSet[word]" />
   </div>
 </template>

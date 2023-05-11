@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { Token } from '../composables/nlp'
 
-const { token } = defineModels<{
+const { token } = defineProps<{
   token: Token
+}>()
+
+const { modelValue } = defineModels<{
+  modelValue: string
 }>()
 
 // const isComputed = ref(false)
@@ -13,7 +16,6 @@ const { token } = defineModels<{
 //     isComputed.value = true
 //   }
 // }
-const showText = ref(token.value.items[Math.floor(Math.random() * token.value.items.length)])
 // const show = computed(() => {
 //   switch (attributes[curid.value]) {
 //     case 'word':
@@ -34,13 +36,13 @@ const showText = ref(token.value.items[Math.floor(Math.random() * token.value.it
   </span>
   <span v-else>
     <el-dropdown :class="token.tag" trigger="hover">
-      {{ showText }}
+      {{ modelValue }}
       <template #dropdown>
         <el-dropdown-menu>
           <el-dropdown-item
             v-for="(item, index) in token.items"
             :key="index"
-            @click="showText = item"
+            @click="modelValue = item"
           >
             {{ item }}
           </el-dropdown-item>
