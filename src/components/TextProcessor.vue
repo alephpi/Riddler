@@ -59,6 +59,13 @@ function processText() {
   }
 }
 
+function encodeText() {
+  for (const [i, token] of tokens.value.entries()) {
+    const items = tokenSet.value[token.word].items
+    showTexts.value[i] = items[Math.floor(map(items.length, 1 - temper.value / 100))] || word
+  }
+}
+
 const index = ref(0)
 const examples = [
   '这种事情见得多了，我只想说懂得都懂，不懂的我也不多解释，毕竟自己知道就好，细细品吧。',
@@ -95,6 +102,14 @@ function randomText() {
     >
       加密
     </button>
+    <button
+      class="m-3 text-sm btn"
+      :disabled="tokens.length === 0"
+      @click="encodeText"
+    >
+      更新
+    </button>
+
     <Share :text="showTexts.join('')" />
   </div>
 
