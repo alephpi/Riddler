@@ -1,6 +1,7 @@
 import { POSTAG, Segment, useDefault } from 'segmentit'
 import { pinyin as pronounce } from 'pinyin'
 import { timestamp } from '@vueuse/core'
+import axios from 'axios'
 import MARSRaw from '../data/mars.min.json'
 import HOMORaw from '../data/homophones.json'
 
@@ -119,4 +120,16 @@ export function homoph(word: string, pinyin: string[], temper = 0.1): string {
     homo += candi
   }
   return homo
+}
+export async function translate(word: string, s = 'cn', t = 'en'): Promise<string> {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${t}&dt=t&q=${encodeURI(word)}`
+  try {
+    const response = await axios.get(url)
+    const translatedText = response.data[0][0][0]
+    return translatedText
+  }
+  catch (error) {
+    console.error(error)
+    return ''
+  }
 }

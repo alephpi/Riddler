@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { type Token, tokenize } from '../composables/nlp'
+import { type Token, tokenize, translate } from '../composables/nlp'
+import { options } from '~/composables/state'
 
 const inputText = ref('')
-const tokens = ref<Token[]>([])
+let tokens: Token[] = []
 // const isProcessed = ref(false)
 // const nounTokens = ref<object[]>([])
 // const verbTokens = ref<object[]>([])
@@ -23,14 +24,17 @@ function map(l: number, a: number): number {
   else
     return (l * (x - a) + 1 - x) / (1 - a)
 }
-
-function processText() {
+let processed = false
+let isProcessing = false
+async function processText() {
+  processed = false
+  isProcessing = true
   // console.log(inputText.value)
   id2token.value = {}
   tokenSet.value = {}
   showTexts.value = []
-  tokens.value = tokenize(inputText.value)
-  for (const token of tokens.value) {
+  tokens = tokenize(inputText.value)
+  for (const token of tokens) {
     const word = token.word
     // console.log(word)
     const id = token.id
@@ -42,11 +46,16 @@ function processText() {
     if (!(word in tokenSet.value)) {
       // compute only for tags of interest (e.g. nouns and verbs)
       if (tag) {
-        const py_normal = pronounce(word, { style: 'normal' }).join(' ')
-        const py_abbr = pronounce(word, { style: 'first_letter' }).join('')
-        const mars = march(word, temper.value / 100)
-        const homo = homoph(word, py_normal.split(' '), temper.value / 100)
-        items.push(py_normal, py_abbr, mars, homo)
+        if (options.小学生)
+          items.push(pronounce(word, { style: 'normal' }).join(' '))
+        if (options.yyds)
+          items.push(pronounce(word, { style: 'first_letter' }).join(''))
+        if (options.火星文)
+          items.push(march(word, temper.value / 100))
+        if (options.谐音梗)
+          items.push(homoph(word, pronounce(word, { style: 'normal' }).join(' ').split(' '), temper.value / 100))
+        if (options.海龟腔)
+          items.push(await translate(word))
       }
       tokenSet.value[word] = {
         tag,
@@ -57,12 +66,15 @@ function processText() {
     const showText = items[Math.floor(map(items.length, 1 - temper.value / 100))] || word
     showTexts.value.push(showText)
   }
+  isProcessing = false
+  processed = true
 }
+// onMounted()
 
 function encodeText() {
-  for (const [i, token] of tokens.value.entries()) {
+  for (const [i, token] of tokens.entries()) {
     const items = tokenSet.value[token.word].items
-    showTexts.value[i] = items[Math.floor(map(items.length, 1 - temper.value / 100))] || word
+    showTexts.value[i] = items[Math.floor(map(items.length, 1 - temper.value / 100))]
   }
 }
 
@@ -98,6 +110,7 @@ function randomText() {
     <button
       class="m-3 text-sm btn"
       :disabled="!inputText"
+      bg
       @click="processText"
     >
       加密
@@ -115,6 +128,7 @@ function randomText() {
 
   <!-- <p>{{ tokens }}</p> -->
   <div
+    v-if="processed"
     w="50%"
     class="m-auto"
   >
