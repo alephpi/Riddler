@@ -46,6 +46,7 @@ declare global {
   const homoph: typeof import('./src/composables/nlp')['homoph']
   const ignorableWatch: typeof import('@vueuse/core')['ignorableWatch']
   const inject: typeof import('vue')['inject']
+  const isCopied: typeof import('./src/composables/state')['isCopied']
   const isDark: typeof import('./src/composables/dark')['isDark']
   const isDefined: typeof import('@vueuse/core')['isDefined']
   const isProxy: typeof import('vue')['isProxy']
@@ -110,6 +111,7 @@ declare global {
   const toRefs: typeof import('vue')['toRefs']
   const toggleDark: typeof import('./src/composables/dark')['toggleDark']
   const tokenize: typeof import('./src/composables/nlp')['tokenize']
+  const translate: typeof import('./src/composables/nlp')['translate']
   const triggerRef: typeof import('vue')['triggerRef']
   const tryOnBeforeMount: typeof import('@vueuse/core')['tryOnBeforeMount']
   const tryOnBeforeUnmount: typeof import('@vueuse/core')['tryOnBeforeUnmount']
@@ -340,6 +342,7 @@ declare module 'vue' {
     readonly homoph: UnwrapRef<typeof import('./src/composables/nlp')['homoph']>
     readonly ignorableWatch: UnwrapRef<typeof import('@vueuse/core')['ignorableWatch']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly isCopied: UnwrapRef<typeof import('./src/composables/state')['isCopied']>
     readonly isDark: UnwrapRef<typeof import('./src/composables/dark')['isDark']>
     readonly isDefined: UnwrapRef<typeof import('@vueuse/core')['isDefined']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -404,6 +407,7 @@ declare module 'vue' {
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>
     readonly toggleDark: UnwrapRef<typeof import('./src/composables/dark')['toggleDark']>
     readonly tokenize: UnwrapRef<typeof import('./src/composables/nlp')['tokenize']>
+    readonly translate: UnwrapRef<typeof import('./src/composables/nlp')['translate']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly tryOnBeforeMount: UnwrapRef<typeof import('@vueuse/core')['tryOnBeforeMount']>
     readonly tryOnBeforeUnmount: UnwrapRef<typeof import('@vueuse/core')['tryOnBeforeUnmount']>

@@ -1,24 +1,15 @@
-<!-- eslint-disable quote-props -->
 <script setup lang="ts">
 import { options, temper } from '~/composables/state'
-
-// const options = ['谐音梗', '火星文', '小学生', '海龟腔', 'yyds']
-// const options = ['谐音梗']
-// const checkedOptions = ref(options)
-// const d = {
-//   '谐音梗': isHomo,
-//   '火星文': isMars,
-//   '小学生': isChild,
-//   '海龟腔': isEn,
-//   'yyds': isYYDS,
-// }
 </script>
 
 <template>
   <div py-4 class="slider">
-    <span>温度</span>
+    <div mb-2>
+      温度
+    </div>
     <el-slider
       v-model="temper"
+      placement="right"
     />
   </div>
   <div py-2 />
