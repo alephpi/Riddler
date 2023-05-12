@@ -26,7 +26,7 @@
 
 - [x] yyds（缩写）: 无产阶级 -> wcjj
 
-- [ ] emoji（抽象）: 无产阶级 -> 你 👷👴 来 🌶️(由于已经有相关网站实现该功能，本工具暂不重复)
+- [ ] 抽象话（emoji）: 无产阶级 -> 你 👷👴 来 🌶️(由于已经有相关网站实现该功能，本工具暂不重复)
 
 
 ## 示例
@@ -55,3 +55,22 @@
 ## 许可证
 
 MIT License
+## Usage
+
+### Development
+
+Just run and visit http://localhost:3333
+
+```bash
+pnpm dev
+```
+
+### Build
+
+To build the App, run
+
+```bash
+pnpm build
+```
+
+And you will see the generated file in `dist` that ready to be served.
