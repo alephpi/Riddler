@@ -7,7 +7,7 @@
     <a
       i-carbon-logo-github icon-btn
       rel="noreferrer"
-      href="https://github.com/alephpi"
+      href="https://github.com/alephpi/Riddler"
       target="_blank"
       title="GitHub"
     />
