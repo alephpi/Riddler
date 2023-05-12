@@ -6,14 +6,6 @@ defineOptions({
   name: 'IndexPage',
 })
 
-const name = $ref('')
-
-const router = useRouter()
-function go() {
-  if (name)
-    router.push(`/hi/${encodeURIComponent(name)}`)
-}
-
 const colorTemper = computed(() => MAGMA[temper.value])
 </script>
 

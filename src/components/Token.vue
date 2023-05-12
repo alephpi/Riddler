@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Token } from '../composables/nlp'
+import type { Token } from '~/composables'
 
 const { token } = defineProps<{
   token: Token

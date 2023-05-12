@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { type Token, tokenize, translate } from '../composables/nlp'
-import { isCopied, options } from '~/composables/state'
+import { type Token, isCopied, options, tokenize, translate } from '~/composables'
 
 const inputText = ref('')
 let tokens: Token[] = []
@@ -102,18 +101,20 @@ function randomText() {
   </div>
   <div py-1 />
   <div>
-    <button p-2 text-6 icon-btn @click="randomText">
+    <button
+      p-2 text-6 icon-btn
+      :disabled="isProcessing"
+      @click="randomText"
+    >
       <div i-carbon-idea />
     </button>
 
     <button
-      :disabled="!inputText"
+      :disabled="!inputText || isProcessing"
       p-2 text-6 icon-btn
       @click="processText"
     >
-      <div :class="{ loading: isProcessing }">
-        <div :class="{ 'i-carbon-play': !isProcessing, 'i-carbon-rotate': isProcessing }" />
-      </div>
+      <div :class="{ 'i-carbon-play': !isProcessing, 'i-carbon-rotate': isProcessing, 'loading': isProcessing }" />
     </button>
 
     <!-- <button
@@ -126,7 +127,7 @@ function randomText() {
     <button
       p-2 text-6
       icon-btn
-      :disabled="tokens.length === 0"
+      :disabled="tokens.length === 0 || isProcessing"
       @click="encodeText"
     >
       <div i-carbon-renew />
@@ -140,6 +141,7 @@ function randomText() {
     mt-4
     w="50%"
     class="m-auto"
+    :disabled="isProcessing"
   >
     <Token v-for="(word, id, i) in id2token" :key="id" v-model="showTexts[i]" :token="tokenSet[word]" />
   </div>
