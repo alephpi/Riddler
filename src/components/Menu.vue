@@ -3,19 +3,23 @@ import { options, temper } from '~/composables/state'
 </script>
 
 <template>
-  <div py-4 class="slider">
-    <div mb-2>
-      温度
+  <div grid>
+    <div py-4 class="slider">
+      <div mb-2>
+        温度
+      </div>
+      <el-slider
+        v-model="temper"
+        placement="right"
+      />
     </div>
-    <el-slider
-      v-model="temper"
-      placement="right"
-    />
+    <div py-2 />
+    <div py-2>
+      <el-checkbox v-for="key in Object.keys(options)" :key="key" v-model="options[key]">
+        {{ key }}
+      </el-checkbox>
+    </div>
   </div>
-  <div py-2 />
-  <el-checkbox v-for="key in Object.keys(options)" :key="key" v-model="options[key]">
-    {{ key }}
-  </el-checkbox>
 </template>
 
 <style>

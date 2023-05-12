@@ -44,3 +44,10 @@ const colorTemper = computed(() => MAGMA[temper.value])
     <TextProcessor />
   </div>
 </template>
+
+<style>
+  .el-popover{
+    display: flex;
+    justify-content:center
+  }
+</style>
